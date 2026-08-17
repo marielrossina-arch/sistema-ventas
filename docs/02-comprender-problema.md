@@ -21,3 +21,6 @@ Poder ver la sección ventas, producto ingresado y egresado, inventario a tiempo
 ## Planteamiento del Problema 
 ### Ferreteria San Martin
 Don Ernesto, Marta y Luis tienen el problema de que se acaba el producto y no se dan cuenta; ignoran cuántas ventas realizaron; no entienden lo que escriben en la libreta, lo cual cuesta tiempo para aprender y corregir errore, dinero ya que no se realiza la venta. Una solución exitosa debería registrar ventas rápidamente, visualizar las ventas y captar el inventario a tiempo.
+
+### Mi caso Propio
+Don Fernando tiene el problema de que no registra ventas realizadas de su productos; no hay un centralizador de datos de sus clientes; existe pérdida de número de mobil juntamente con los clientes registrados a ese numero; se ignora la venta y la ganancia por producto, lo cual cuesta tiempo de recuperar el número para recuperar los clientes, dinero. Una solución exitosa debería compilar los datos de clientes y productos, registrar ventas y ganancias netas.
