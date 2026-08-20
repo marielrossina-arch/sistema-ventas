@@ -45,3 +45,39 @@
 3. HU-03  (RF-03 - Debe tener )
 4. HU-04  (RF-04 - Debe tener )
 5. HU-05  (RF-05 - Debería tener )
+
+
+
+### Mi Propio Caso 
+## Historias de usuario 
+- HU-01: Como vendedor, quiero registrar una venta con productos y cantidades, para no tener que anotarla a mano en el cuadero. 
+- HU-02: Como administrador, quiero ver el total vendido en un periodo, para saber cómo va el negocio sin sumar a mano. 
+- HU-03:  Como administrador, quiero ver un resumen de ventas desde mi celular, para revisarlo, aunque no esté en la pc. 
+ 
+## Criterios de aceptación
+### HU-01 
+    - Se pueden elegir uno o más productos y sus cantidades.
+    - El sistema calcula el total a cobrar automáticamente.
+    - La venta queda guardada y se puede consultar después. 
+    - La existencia de los productos vendidos se actualiza automáticamente. 
+### HU-02
+    - Se puede seleccionar una fecha inicial y una fecha final. 
+    - El sistema muestra las ventas realizadas en ese periiodo. 
+    - El sistema calcula automáticamente el total vendido. 
+    - El total corresponde a las ventas registradas en las fechas seleccionadas. 
+### HU-03
+     - El administrador puede ingresar al sistema desde el navegador de un celular. 
+    - El sistema muestra un resumen de las vntas registradas. 
+    - La información se adapta correctamente a la pantalla del celular. 
+    - Solo un usuario  autorizado puede consultar el resumen.
+     
+## Trazabilidad
+- HU-01 -> RF-01
+- HU-02 -> RF-02
+- HU-03 -> RF-03
+
+
+## Backlog ordenado
+1. HU-01  (RF-01 - Debe tener )
+2. HU-02  (RF-02 - Debe tener )
+3. HU-03  (RF-03 - Debería tener )
