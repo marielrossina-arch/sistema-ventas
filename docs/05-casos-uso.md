@@ -39,6 +39,7 @@ La venta queda regisrada y la exitencia de los productos vendidos se actualiza.
 >> ### Flujos alternativos 
 >> - 4a. El Sistema calcula el total a cobrar y registra fecha y hora. 
 >> - 6a. Si el vendedor cancela antes de confirmar, no se guarda ningún cambio. 
+- 7a. Producto personalizado, el cliente envía su diseño. 
 >> 
 >> ### Postcondición
 >> La venta queda regisrada y la lista de los productos vendidos se actualiza.

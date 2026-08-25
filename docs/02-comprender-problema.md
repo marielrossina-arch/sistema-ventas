@@ -36,16 +36,18 @@ Si se pierde el chip o le roban el número de empresa, se pierden los clientes a
 Las ventas se realizan mediante whatsapp solamente
 Se ignora el registro producto egresado,  precios, productos favoritos. 
 No registra un centralizador de datos, tan solo redes sociales y su métrica. 
+Vista de la venta total en un periodo. 
+Control de filamento
 
 ## Qué esperan del nuevo sistema
 El dueño pueda registrar una venta rápida
 Poder ver la sección ventas,  producto egresado, ganancia neta. 
 
 ## Actores del Sistema
-- **Don Ernesto** (directo): ver ventas totales e inventario, aunque sea desde su celular.
+- **Don Luis Fernado** (directo): ver ventas totales e inventario de filamento aunque sea desde su celular.
 
 ## Planteamiento del Problema 
-### Ferreteria San Martin
+### Artesano 3D
 
-Don Fernando tiene el problema de que no registra ventas realizadas de su productos; no hay un centralizador de datos de sus clientes; existe pérdida de número de mobil de la empresa juntamente con los clientes registrados a ese numero; se ignora la venta y la ganancia por producto, lo cual cuesta tiempo de recuperar el número para recuperar los clientes, como tambien cuesta dinero. 
-Una solución exitosa debería compilar los datos de clientes y productos, registrar ventas y ganancias netas. 
+Don Fernando tiene el problema de que no registra ventas realizadas de sus productos; no hay un centralizador de datos de sus clientes; existe pérdida de número de mobil de la empresa juntamente con los clientes registrados a ese numero; se ignora la venta y la ganancia por producto, lo cual cuesta tiempo de recuperar el número para recuperar los clientes, como tambien cuesta dinero. 
+Una solución exitosa debería compilar los datos de clientes y productos, registrar ventas y ganancias netas u quizás cantidad de filamento. 

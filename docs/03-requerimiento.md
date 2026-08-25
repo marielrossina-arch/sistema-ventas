@@ -80,11 +80,13 @@
 - RF-01 : El sistema debe permitir registrar una venta indicando productos y cantidades.
 - RF-02 :  El sistema debe permitir registrar nuevos productos con nombre, precio.
 - RF-03 :  El sistema debe permitir consultar el total vendido en un periodo.
-- RF-04 :  El sistema debe permitir a Don Ernesto ver un resumen de ventas desde el celular.
+- RF-04 :  El sistema debe permitir a Don Luis Fernando ver un resumen de ventas desde el celular.
+-RF-05 : El sistema calcula la cantidad de filamento disponible y avisa si se debe comprar.
+RF-06 : El cliente tiene su diseño personalizado, fuera del catalogo. 
 
 ## Requerimientos no funcionales
 - RNF-01 : (Disponibilidad): El sistema debe funcionar en cualquier navegador moderno, sin instalar nada.
-- RNF-02 :  (Seguridad) : solo Don Ernesto  deben poder acceder al sistema.
+- RNF-02 :  (Seguridad) : solo Don Luis F deben poder acceder al sistema.
 - RNF-03  : (Compatibilidad) : el sistema debe verse y funcioar bien tanto en computadora como en celular.
 
 ## Restricciones 
@@ -97,39 +99,7 @@
 |Categoria             | Requerimiento / Temas              | 
 |----------------------|------------------------------------|
 |Debe tener (Must)     |RF-01, RF-02, RF-03,           |
-|Debería tener (Should)|RF-04                      |
-|Podría tener (Could)  | -                                  |
+|Debería tener (Should)|RF-04 , RF-06                      |
+|Podría tener (Could)  |RF-05                                |
 |No por ahora (Won´t)  |Manejo de ventas fiadas / a crédito |
 
-## Historias de usuario 
-- HU-01: Como vendedor, quiero registrar una venta con productos y cantidades, para no tener que anotarla a mano en el cuadero. 
-- HU-02: Como administrador, quiero ver el total vendido en un periodo, para saber cómo va el negocio sin sumar a mano. 
-- HU-03:  Como administrador, quiero ver un resumen de ventas desde mi celular, para revisarlo, aunque no esté en la pc. 
- 
-## Criterios de aceptación
-### HU-01 
-    - Se pueden elegir uno o más productos y sus cantidades.
-    - El sistema calcula el total a cobrar automáticamente.
-    - La venta queda guardada y se puede consultar después. 
-    - La existencia de los productos vendidos se actualiza automáticamente. 
-### HU-02
-    - Se puede seleccionar una fecha inicial y una fecha final. 
-    - El sistema muestra las ventas realizadas en ese periiodo. 
-    - El sistema calcula automáticamente el total vendido. 
-    - El total corresponde a las ventas registradas en las fechas seleccionadas. 
-### HU-03
-     - El administrador puede ingresar al sistema desde el navegador de un celular. 
-    - El sistema muestra un resumen de las vntas registradas. 
-    - La información se adapta correctamente a la pantalla del celular. 
-    - Solo un usuario  autorizado puede consultar el resumen.
-     
-## Trazabilidad
-- HU-01 -> RF-01
-- HU-02 -> RF-02
-- HU-03 -> RF-03
-
-
-## Backlog ordenado
-1. HU-01  (RF-01 - Debe tener )
-2. HU-02  (RF-02 - Debe tener )
-3. HU-03  (RF-03 - Debería tener )

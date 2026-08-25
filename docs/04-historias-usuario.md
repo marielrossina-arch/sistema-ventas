@@ -57,12 +57,12 @@
 ## Criterios de aceptación
 ### HU-01 
     - Se pueden elegir uno o más productos y sus cantidades.
-    - El sistema calcula el total a cobrar automáticamente.
+    - El sistema calcula el total a cobrar automáticamente ingresando la cantidad de gramos de filamento. 
     - La venta queda guardada y se puede consultar después. 
-    - La existencia de los productos vendidos se actualiza automáticamente. 
+    - La venta de los productos vendidos se registra automáticamente. 
 ### HU-02
     - Se puede seleccionar una fecha inicial y una fecha final. 
-    - El sistema muestra las ventas realizadas en ese periiodo. 
+    - El sistema muestra las ventas realizadas en ese periodo. 
     - El sistema calcula automáticamente el total vendido. 
     - El total corresponde a las ventas registradas en las fechas seleccionadas. 
 ### HU-03
