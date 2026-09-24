@@ -75,54 +75,63 @@
 ## mI PROPIO CASO DE USO GUIA 6 Artesano 3D
 ## Entidades
 - clientes: quién compra, cuando aplica (mencionado en la entrevista, Guía 2).
-- productos: lo que se vende (aparece ne CU-02, Cu-02, CU-03)
+- filamento : 
 - ventas (pedido): cada transacción registrada (CU-01)
-- usuario:  queién registra cada venta (actor principal de CU-01)
+- categoria: 
 - detalle_venta (detalle_pedido): un pedido incluya multiples productos o servicios (relación N:N).
 
 
 ## Atributos
 ## clientes 
-- id: identificador (clave primaria)
+- id_cliente: identificador (clave primaria)
 - nombre: texto
 - email: texto (opcional)
 - telefono : número entero
-- fecha_registro: numero entero
+- id_venta: fk
 
-### productos 
-- id_producto: identificador (clave primaria).
-- nombre: texto
-- precio: número decimal
-- existencia: número entero
+## Filamento
+- id_filamento: 
+- nombre: texto 
+- precio_hora: numerico
+
+##  categoria
+- id_categoria: pk
+- nombre: texto (joyeria, decoracion, personalizado, arquitectura)
+
+
+### ventas (pedido)
+ - id_venta: identificador (clave primaria)
+ - fecha_pedido: fecha / hora
+ - id_ cliente: clave foranea -> clientes quien compra (opcional)
+ - total: numerico
+ 
+
+
+### detalle_venta
+ - id_detalle: identificador (clave primaria)
+ - id_venta: clave foránea -> ventas 
+- id_categoria: clavew foranea -> categoria
+ - id_filamento
+  - tiempo: se agrega manualmente numerico
+  - sub_total: numerico
+
+
+## Relaciones 
+ - ventas : id_cliente compra id_filamento 
+ - ventas : id_ cliente compra id_categoria
+ - detalle_venta : id_categoria se vende id_filamento
+ - detalle_venta : id_venta sub_total 
+ 
+
+
+
 
 ### usuarios
 - id_usuario: identficiador (clave primaria)
 - nombre: textos
 - rol: texto (vendedor / administrador)
-
-### ventas (pedido)
- - id_pedido: identificador (clave primaria)
- - fecha_pedido: fecha / hora
- - id_usuario: clave foranea -> usuario
- - id_ cliente: clave foranea -> clientes (opcional)
- - cantidad: numero entero
- - monto_total: número decimal
-
-### detalle_venta
- - id_detalle: identificador (clave primaria)
- - id_venta: clave foránea -> ventas 
- - id_ producto: clave foránea -> productos 
- - cantidad: número entero 
- - precio_unitario: número decimal
-
-## Relaciones 
- - ventas.id_usuario -> usuarios.id (un usuario tiene muchas ventas pero solo hay un usuario, don fernando)
- - ventas.id_cliente -> clientes.id (un cliente tiene muchos pedidos, opcional)(1:N)
- - detalle_venta.id_venta -> ventas.id (una venta o pedido  tiene uno o varios detalles de pedido) (1:N)
- - detalle_venta.id_producto -> producto.id (un producto aparece n muchas lineas de detalle)
- 
-
-
+- id_venta: fk 
+- id_cliente: fk
 
 Note on your untracked files:
 Earlier, you had an untracked file in diagramas/guia-5-casos-de-uso.png. If you want to include that file in your repository as well, run these commands before pushing:
