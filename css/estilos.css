@@ -52,7 +52,7 @@ header h3 {
 }
 
 main {
-  max-width: 800;
+  max-width: 1100px;
   margin: 2rem auto;
   padding: 0 1rem;
 }
@@ -64,4 +64,50 @@ table {
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(122, 90, 56, 0.12);
+}
+
+#galeria {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+.tarjeta {
+  background: var(--blanco-calido);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(122, 90, 56, 0.12);
+  transition:
+    transform 0.25s,
+    box-shadow 0.25s;
+}
+
+.tarjeta:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(122, 90, 56, 0.2);
+}
+
+.tarjeta img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+.tarjeta-info {
+  padding: 1rem 1.2rem 1.3rem;
+}
+
+.tarjeta-info h3 {
+  margin: 0;
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 600;
+  font-size: 1.4rem;
+  color: var(--madera);
+}
+
+.precio {
+  margin: 0.3rem 0 0;
+  color: var(--hoja);
+  font-weight: 400;
 }

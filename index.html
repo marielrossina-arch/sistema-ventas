@@ -20,29 +20,71 @@
     </header>
 
     <main>
+      <!-- Tabla de ventas -->
       <table id="tabla-ventas">
         <thead>
           <tr>
-            <th>categoria</th>
-            <th>precio_item</th>
-            <th>id_ventas</th>
+            <th>Categoría</th>
+            <th>Precio</th>
+            <th>total vendido</th>
           </tr>
         </thead>
         <tbody id="cuerpo-ventas"></tbody>
       </table>
+
+      <!-- Formulario para registrar una venta -->
+      <h3>Registrar venta</h3>
       <form id="form-venta">
-        <label for="categoria">
-          <select id="categoria"></select>
-        </label>
-        <label for="precio_item">
-          <input type="number" id="campo-precio_itemm" min="1" value="1" />
-        </label>
+        <label for="campo-categoria">Categoría</label>
+        <select id="campo-categoria" required></select>
+
+        <label for="campo-precio_item">Precio</label>
+        <input
+          type="number"
+          id="campo-precio_item"
+          min="1"
+          value="1"
+          required
+        />
+
         <button type="submit">Registrar Venta</button>
       </form>
       <p id="mensaje-venta"></p>
+
+      <!-- Tabla de categorías -->
+      <h3>Categorías</h3>
+      <table id="tabla-categorias">
+        <thead>
+          <tr>
+            <th>Categoría</th>
+            <th>Precio</th>
+            <th>total vendido</th>
+          </tr>
+        </thead>
+        <tbody id="cuerpo-categorias"></tbody>
+      </table>
+
+      <!-- Panel de edición (opcional, oculto por defecto) -->
+      <div id="panel-edicion" style="display: none">
+        <h3>Editar categoría</h3>
+        <form id="form-editar-categoria">
+          <input type="hidden" id="editar-id" />
+          <label
+            >Categoría:
+            <input type="number" id="editar-categoria" />
+          </label>
+          <label
+            >Precio:
+            <input type="number" id="editar-precio" step="0.01" />
+          </label>
+          <button type="submit">Guardar Cambios</button>
+        </form>
+      </div>
+
       <h2>Piezas entregadas</h2>
       <section id="galeria"></section>
     </main>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-client.js"></script>
     <script src="js/app.js"></script>
