@@ -11,6 +11,8 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="css/estilos.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
   </head>
   <body>
     <header>
@@ -19,24 +21,55 @@
       <h3>Sistema de Ventas</h3>
     </header>
 
-    <main>
-      <!-- Tabla de ventas -->
-      <table id="tabla-ventas">
-        <thead>
-          <tr>
-            <th>Categoría</th>
-            <th>Precio</th>
-            <th>total vendido</th>
-          </tr>
-        </thead>
-        <tbody id="cuerpo-ventas"></tbody>
-      </table>
+    <section id="seccion-login"> 
+      <h2>Iniciar sesión</h2>
+      <form id="form-login">
+        <label for="login-email">Correo electrónico</label>
+        <input type="email" id="login-email" required />
 
+        <label for="login-password">Contraseña</label>
+        <input type="password" id="login-password" required />
+
+        <button type="submit">Iniciar sesión</button>
+      </form>
+      <p id="mensaje-login"></p>
+    </section>
+
+    <div id="seccion-app">
+    <button id="btn-cerrar-sesion">Cerrar sesión</button>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Categoría</th>
+          <th>Precio</th>
+          <th>Total vendido</th>
+        </tr>
+    </table>
+    
+    
+    <div id="panel-edicion" style="display: none">
+      <h3>Editar categoría</h3>
+      <form id="form-editar-categoria">
+        <input type="hidden" id="editar-id" />
+        <label>Categoría:
+          <input type="number" id="editar-categoria" />
+        </label>
+        <label
+          >Precio:
+          <input type="number" id="editar-precio" step="0.01" />
+        </label>
+        
+      </form>
+    </div>
+    
+  </div>
+   
       <!-- Formulario para registrar una venta -->
       <h3>Registrar venta</h3>
       <form id="form-venta">
-        <label for="campo-categoria">Categoría</label>
-        <select id="campo-categoria" required></select>
+        <label for="campo-categoriaNombre">Categoría</label>
+        <select id="campo-categoriaNombre" required></select>
 
         <label for="campo-precio_item">Precio</label>
         <input
@@ -51,6 +84,12 @@
       </form>
       <p id="mensaje-venta"></p>
 
+      <form id="form-total">
+      <label for="campo-total">Total vendido:</label>
+      <input type="number" id="campo-total" step="0.01" />
+      <button type="submit">Actualizar total</button>
+      <p id="mensaje-total"></p>
+    </form>
       <!-- Tabla de categorías -->
       <h3>Categorías</h3>
       <table id="tabla-categorias">
@@ -83,7 +122,7 @@
 
       <h2>Piezas entregadas</h2>
       <section id="galeria"></section>
-    </main>
+    
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-client.js"></script>

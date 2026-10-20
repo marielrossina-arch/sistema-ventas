@@ -1,36 +1,26 @@
-// async function iniciar() {
-// const { data, error } = await sup.from("Categoria").select();
-// if (error) {
-// console.error("Error al leer Categoria:", error);
-// return;
-// }
-// console.log("Categoria encontrados:", data);
-// }
-// iniciar();
-
-// const cuerpoTabla = document.querySelector("#cuerpo-categorias");
+// ================== ESTADO ==================
 let categoriaCache = [];
 let ventasCache = [];
 
-// Suma de precios vendidos de una categoría
+// ================== UTILIDADES ==================
 function totalCategoria(idCategoria) {
   return ventasCache
     .filter((v) => Number(v.categoria) === Number(idCategoria))
-    .reduce((suma, v) => suma + Number(v.precio_item), 0);
+    .reduce((suma, v) => suma + Number(v.precio), 0);
 }
 
 function nombreCategoria(idCategoria) {
   const c = categoriaCache.find((c) => Number(c.id) === Number(idCategoria));
-  return c ? c.categoria : "—";
+  return c ? c.nombre : "—";
 }
 
-// ===== AQUÍ SE LLENA EL SELECTOR =====
+// ================== PINTAR ==================
 function llenarSelect() {
   const select = document.querySelector("#campo-categoria");
   select.innerHTML =
     '<option value="">Elige una categoría</option>' +
     categoriaCache
-      .map((c) => `<option value="${c.id}">${c.categoria}</option>`)
+      .map((c) => `<option value="${c.id}">${c.nombre}</option>`)
       .join("");
 }
 
@@ -46,7 +36,7 @@ function pintarTablaVentas() {
       (v) => `
       <tr>
         <td>${nombreCategoria(v.categoria)}</td>
-        <td>$${v.precio_item}</td>
+        <td>$${v.precio}</td>
         <td>$${totalCategoria(v.categoria)}</td>
       </tr>`,
     )
@@ -57,16 +47,20 @@ function pintarTablaCategorias() {
   const tbody = document.querySelector("#cuerpo-categorias");
   if (categoriaCache.length === 0) {
     tbody.innerHTML =
-      '<tr><td colspan="3">Todavía no hay categorías registradas.</td></tr>';
+      '<tr><td colspan="4">Todavía no hay categorías registradas.</td></tr>';
     return;
   }
   tbody.innerHTML = categoriaCache
     .map(
       (c) => `
       <tr>
-        <td>${c.categoria}</td>
-        <td>$${c.precio_item}</td>
+        <td>${c.nombre}</td>
+        <td>$${c.precio}</td>
         <td>$${totalCategoria(c.id)}</td>
+        <td>
+          <button class="btn-editar" data-id="${c.id}">Editar</button>
+          <button class="btn-eliminar" data-id="${c.id}">Eliminar</button>
+        </td>
       </tr>`,
     )
     .join("");
@@ -78,23 +72,24 @@ function pintarGaleria() {
     .map(
       (c) => `
       <article class="tarjeta">
-        <img src="${c.imaes_url || "placeholder.jpg"}" alt="${c.categoria}">
+        <img src="${c.images_url || "placeholder.jpg"}" alt="${c.nombre}">
         <div class="tarjeta-info">
-          <h3>${c.categoria}</h3>
-          <p class="precio">$${c.precio_item}</p>
+          <h3>${c.nombre}</h3>
+          <p class="precio">$${c.precio}</p>
         </div>
       </article>`,
     )
     .join("");
 }
 
+// ================== CARGAR DATOS ==================
 async function cargarTodo() {
   const [cat, ven] = await Promise.all([
-    sup.from("Categoria").select("*"),
+    sup.from("Categoria").select("*").order("id"),
     sup.from("ventas").select("*"),
   ]);
 
-  console.log("Categorias:", cat); // mira esto en la consola
+  console.log("Categorias:", cat);
   console.log("Ventas:", ven);
 
   if (cat.error || ven.error) {
@@ -111,12 +106,11 @@ async function cargarTodo() {
   pintarGaleria();
 }
 
-cargarTodo();
-
+// ================== VENTAS ==================
 // Al elegir categoría, se autocompleta el precio
 document.querySelector("#campo-categoria").addEventListener("change", (e) => {
   const c = categoriaCache.find((c) => Number(c.id) === Number(e.target.value));
-  if (c) document.querySelector("#campo-precio_item").value = c.precio_item;
+  if (c) document.querySelector("#campo-precio").value = c.precio;
 });
 
 // Registrar venta
@@ -126,9 +120,7 @@ document
     event.preventDefault();
 
     const categoria = Number(document.querySelector("#campo-categoria").value);
-    const precio_item = Number(
-      document.querySelector("#campo-precio_item").value,
-    );
+    const precio = Number(document.querySelector("#campo-precio").value);
     const mensaje = document.querySelector("#mensaje-venta");
 
     if (!categoria) {
@@ -136,9 +128,7 @@ document
       return;
     }
 
-    const { error } = await sup
-      .from("ventas")
-      .insert({ categoria, precio_item });
+    const { error } = await sup.from("ventas").insert({ categoria, precio });
 
     if (error) {
       console.error("Error al insertar venta:", error);
@@ -147,14 +137,113 @@ document
     }
 
     mensaje.textContent = "Venta registrada ✔";
-    cargarTodo();
+    await cargarTodo();
   });
 
-if (errorDetalle) {
-  console.error("Error al leer detalle:", errorDetalle);
-  return;
+// ================== EDITAR / ELIMINAR CATEGORÍAS ==================
+document
+  .querySelector("#cuerpo-categorias")
+  .addEventListener("click", async (event) => {
+    const id = Number(event.target.dataset.id);
+    if (!id) return;
+
+    if (event.target.classList.contains("btn-editar")) {
+      const c = categoriaCache.find((c) => c.id === id);
+      document.querySelector("#editar-id").value = c.id;
+      document.querySelector("#editar-nombre").value = c.nombre;
+      document.querySelector("#editar-precio").value = c.precio;
+      document.querySelector("#panel-edicion").style.display = "block";
+      return;
+    }
+
+    if (event.target.classList.contains("btn-eliminar")) {
+      const confirmado = window.confirm(
+        "¿Estás seguro de eliminar esta categoría?",
+      );
+      if (!confirmado) return;
+
+      const { error } = await sup.from("Categoria").delete().eq("id", id);
+      if (error) {
+        console.error("Error al eliminar categoría:", error);
+        return;
+      }
+      await cargarTodo();
+    }
+  });
+
+document
+  .querySelector("#form-editar-categoria")
+  .addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const id = Number(document.querySelector("#editar-id").value);
+    const nombre = document.querySelector("#editar-nombre").value;
+    const precio = Number(document.querySelector("#editar-precio").value);
+
+    const { error } = await sup
+      .from("Categoria")
+      .update({ nombre, precio })
+      .eq("id", id);
+
+    if (error) {
+      console.error("Error al actualizar categoría:", error);
+      return;
+    }
+
+    document.querySelector("#panel-edicion").style.display = "none";
+    await cargarTodo();
+  });
+
+// ================== AUTENTICACIÓN ==================
+function mostrarApp() {
+  document.querySelector("#seccion-login").style.display = "none";
+  document.querySelector("#seccion-app").style.display = "block";
+  cargarTodo();
 }
 
-document.querySelector("#mensaje-venta").textContent = "Venta registrada ✔";
-document.querySelector("#form-venta").reset();
-cargarTodo();
+function mostrarLogin() {
+  document.querySelector("#seccion-login").style.display = "block";
+  document.querySelector("#seccion-app").style.display = "none";
+}
+
+document
+  .querySelector("#form-login")
+  .addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const email = document.querySelector("#login-email").value;
+    const password = document.querySelector("#login-password").value;
+
+    const { error } = await sup.auth.signInWithPassword({ email, password });
+    if (error) {
+      console.error("Error al iniciar sesión:", error);
+      document.querySelector("#mensaje-login").textContent =
+        "Correo o contraseña incorrectos.";
+      return;
+    }
+
+    document.querySelector("#mensaje-login").textContent = "";
+    mostrarApp();
+  });
+
+document
+  .querySelector("#btn-cerrar-sesion")
+  .addEventListener("click", async () => {
+    await sup.auth.signOut();
+    mostrarLogin();
+  });
+
+// ================== INICIO ==================
+async function iniciar() {
+  const {
+    data: { session },
+  } = await sup.auth.getSession();
+
+  if (session) {
+    mostrarApp();
+  } else {
+    mostrarLogin();
+  }
+}
+
+iniciar();
