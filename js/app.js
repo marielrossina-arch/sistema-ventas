@@ -262,14 +262,22 @@ document
   });
 
 // ================== AUTENTICACIÓN ==================
-async function esAdmin() {
-  const { data, error } = await sup
-    .from("admins")
-    .select("user_id")
-    .maybeSingle();
-  return !error && !!data;
-}
 
+async function esAdmin() {
+  const {
+    data: { user },
+  } = await sup.auth.getUser();
+  if (!user) {
+    return false;
+
+    const { data, error } = await sup
+      .from("usuario")
+      .select("rol")
+      .eq("correo_electronico", user.email)
+      .maybeSingle();
+    return !error && !!data;
+  }
+}
 function mostrarApp() {
   document.querySelector("#seccion-login").style.display = "none";
   document.querySelector("#seccion-app").style.display = "block";
