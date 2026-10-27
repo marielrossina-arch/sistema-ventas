@@ -1,4 +1,6 @@
 const SUPABASE_URL = "https://dsdthxypnyhowwcqembj.supabase.co";
-const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRzZHRoeHlwbnlob3d3Y3FlbWJqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5Mjc4MTUxNSwiZXhwIjoyMTA4MzU3NTE1fQ.GLRDSrtvlISjNxjIwgEshDj6X8_F_BEPiVgNVzKv1fg";
+// IMPORTANTE: aquí va la clave "anon" / "publishable" (Project Settings > API).
+// NUNCA la "service_role": esa clave salta todas las reglas RLS y no debe
+// estar en el navegador ni en el repositorio.
+const SUPABASE_ANON_KEY = "PEGA_AQUI_TU_ANON_KEY";
 const sup = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);

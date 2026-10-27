@@ -3,9 +3,24 @@ let categoriaCache = [];
 let detalleCache = []; // filas de detalle_venta
 
 // ================== UTILIDADES ==================
+// Evita que un nombre o descripción con HTML se ejecute al pintarlo (XSS)
+function escaparHTML(texto) {
+  return String(texto ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+// Muestra montos siempre con 2 decimales (evita $0.30000000000000004)
+function formatoMonto(valor) {
+  return "$" + Number(valor).toFixed(2);
+}
+
 function totalCategoria(idCategoria) {
   return detalleCache
-    .filter((d) => Number(d.id_categoria) == Number(idCategoria))
+    .filter((d) => Number(d.id_categoria) === Number(idCategoria))
     .reduce((suma, d) => suma + Number(d.subtotal), 0);
 }
 
@@ -41,7 +56,10 @@ function llenarSelect() {
   select.innerHTML =
     '<option value="">Elige una categoría</option>' +
     categoriaCache
-      .map((c) => `<option value="${c.id_categoria}">${c.nombre}</option>`)
+      .map(
+        (c) =>
+          `<option value="${c.id_categoria}">${escaparHTML(c.nombre)}</option>`,
+      )
       .join("");
 }
 
@@ -56,9 +74,9 @@ function pintarTablaVentas() {
     .map(
       (d) => `
       <tr>
-        <td>${nombreCategoria(d.id_categoria)}</td>
-        <td>$${d.subtotal}</td>
-        <td>$${totalCategoria(d.id_categoria)}</td>
+        <td>${escaparHTML(nombreCategoria(d.id_categoria))}</td>
+        <td>${formatoMonto(d.subtotal)}</td>
+        <td>${formatoMonto(totalCategoria(d.id_categoria))}</td>
       </tr>`,
     )
     .join("");
@@ -75,9 +93,9 @@ function pintarTablaCategorias() {
     .map(
       (c) => `
       <tr>
-        <td>${c.nombre}</td>
-        <td>${c.descripcion || ""}</td>
-        <td>$${totalCategoria(c.id_categoria)}</td>
+        <td>${escaparHTML(c.nombre)}</td>
+        <td>${escaparHTML(c.descripcion)}</td>
+        <td>${formatoMonto(totalCategoria(c.id_categoria))}</td>
         <td>
           <button class="btn-editar" data-id="${c.id_categoria}">Editar</button>
           <button class="btn-eliminar" data-id="${c.id_categoria}">Eliminar</button>
@@ -94,8 +112,8 @@ function pintarGaleria() {
       (c) => `
       <article class="tarjeta">
         <div class="tarjeta-info">
-          <h3>${c.nombre}</h3>
-          <p>${c.descripcion || ""}</p>
+          <h3>${escaparHTML(c.nombre)}</h3>
+          <p>${escaparHTML(c.descripcion)}</p>
         </div>
       </article>`,
     )
@@ -113,7 +131,9 @@ async function cargarTodo() {
   ]);
 
   if (cat.error || det.error) {
-    console.error("Error:", cat.error || det.error);
+    console.error("Error al cargar datos:", cat.error || det.error);
+    document.querySelector("#mensaje-venta").textContent =
+      "No se pudieron cargar los datos. Recarga la página.";
     return;
   }
 
@@ -165,37 +185,49 @@ document
       return;
     }
 
-    const id_usuario = await obtenerIdUsuario();
+    // evita registrar la misma venta dos veces por doble clic
+    const boton = event.target.querySelector("button[type=submit]");
+    boton.disabled = true;
+    try {
+      const id_usuario = await obtenerIdUsuario();
+      if (!id_usuario) {
+        mensaje.textContent =
+          "Tu cuenta no está registrada en la tabla usuario.";
+        return;
+      }
 
-    // 1) Cabecera de la venta
-    const { data: venta, error: errVenta } = await sup
-      .from("ventas")
-      .insert({ total: subtotal, id_usuario })
-      .select()
-      .single();
+      // 1) Cabecera de la venta
+      const { data: venta, error: errVenta } = await sup
+        .from("ventas")
+        .insert({ total: subtotal, id_usuario })
+        .select()
+        .single();
 
-    if (errVenta) {
-      console.error("Error al insertar venta:", errVenta);
-      mensaje.textContent = "Error al registrar la venta.";
-      return;
+      if (errVenta) {
+        console.error("Error al insertar venta:", errVenta);
+        mensaje.textContent = "Error al registrar la venta.";
+        return;
+      }
+
+      // 2) Línea de detalle
+      const { error: errDetalle } = await sup
+        .from("detalle_venta")
+        .insert({ id_venta: venta.id_venta, id_categoria, subtotal });
+
+      if (errDetalle) {
+        console.error("Error al insertar detalle:", errDetalle);
+        // deshacer la cabecera para no dejar una venta vacía
+        await sup.from("ventas").delete().eq("id_venta", venta.id_venta);
+        mensaje.textContent = "Error al registrar la venta.";
+        return;
+      }
+
+      mensaje.textContent = "Venta registrada ✔";
+      event.target.reset();
+      await cargarTodo();
+    } finally {
+      boton.disabled = false;
     }
-
-    // 2) Línea de detalle
-    const { error: errDetalle } = await sup
-      .from("detalle_venta")
-      .insert({ id_venta: venta.id_venta, id_categoria, subtotal });
-
-    if (errDetalle) {
-      console.error("Error al insertar detalle:", errDetalle);
-      // deshacer la cabecera para no dejar una venta vacía
-      await sup.from("ventas").delete().eq("id_venta", venta.id_venta);
-      mensaje.textContent = "Error al registrar la venta.";
-      return;
-    }
-
-    mensaje.textContent = "Venta registrada ✔";
-    event.target.reset();
-    await cargarTodo();
   });
 
 // ================== EDITAR / ELIMINAR CATEGORÍAS ==================
@@ -206,7 +238,8 @@ document
     if (!id) return;
 
     if (event.target.classList.contains("btn-editar")) {
-      const c = categoriaCache.find((c) => c.id_categoria === id);
+      const c = categoriaCache.find((c) => Number(c.id_categoria) === id);
+      if (!c) return;
       document.querySelector("#editar-id").value = c.id_categoria;
       document.querySelector("#editar-nombre").value = c.nombre;
       document.querySelector("#editar-descripcion").value = c.descripcion || "";
@@ -231,6 +264,8 @@ document
           window.alert(
             "No se puede eliminar: la categoría tiene ventas registradas.",
           );
+        } else {
+          window.alert("No se pudo eliminar la categoría.");
         }
         return;
       }
@@ -244,8 +279,15 @@ document
     event.preventDefault();
 
     const id = Number(document.querySelector("#editar-id").value);
-    const nombre = document.querySelector("#editar-nombre").value;
-    const descripcion = document.querySelector("#editar-descripcion").value;
+    const nombre = document.querySelector("#editar-nombre").value.trim();
+    const descripcion = document
+      .querySelector("#editar-descripcion")
+      .value.trim();
+
+    if (!nombre) {
+      window.alert("El nombre de la categoría no puede quedar vacío.");
+      return;
+    }
 
     const { error } = await sup
       .from("categoria")
@@ -254,6 +296,7 @@ document
 
     if (error) {
       console.error("Error al actualizar categoría:", error);
+      window.alert("No se pudo guardar la categoría.");
       return;
     }
 
@@ -262,22 +305,26 @@ document
   });
 
 // ================== AUTENTICACIÓN ==================
-
+// Comprueba que el usuario con sesión tenga rol de administrador
+// en la tabla usuario (buscado por su correo).
 async function esAdmin() {
   const {
     data: { user },
   } = await sup.auth.getUser();
-  if (!user) {
-    return false;
+  if (!user) return false;
 
-    const { data, error } = await sup
-      .from("usuario")
-      .select("rol")
-      .eq("correo_electronico", user.email)
-      .maybeSingle();
-    return !error && !!data;
+  const { data, error } = await sup
+    .from("usuario")
+    .select("rol")
+    .eq("correo_electronico", user.email)
+    .maybeSingle();
+  if (error) {
+    console.error("Error al verificar rol:", error);
+    return false;
   }
+  return !!data && String(data.rol).trim().toLowerCase() === "administrador";
 }
+
 function mostrarApp() {
   document.querySelector("#seccion-login").style.display = "none";
   document.querySelector("#seccion-app").style.display = "block";
@@ -320,6 +367,11 @@ document
   .querySelector("#btn-cerrar-sesion")
   .addEventListener("click", async () => {
     await sup.auth.signOut();
+    // limpiar datos en memoria para que no queden a la vista del siguiente usuario
+    categoriaCache = [];
+    detalleCache = [];
+    document.querySelector("#panel-edicion").style.display = "none";
+    document.querySelector("#mensaje-venta").textContent = "";
     mostrarLogin();
   });
 
@@ -331,6 +383,8 @@ async function iniciar() {
   if (session && (await esAdmin())) {
     mostrarApp();
   } else {
+    // sesión guardada de una cuenta sin permisos: cerrarla
+    if (session) await sup.auth.signOut();
     mostrarLogin();
   }
 }
