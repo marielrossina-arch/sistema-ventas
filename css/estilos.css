@@ -1,113 +1,268 @@
 :root {
-  --crema: #f3ead8;
-  --blanco-calido: #fbf7ee;
-  --arena: #e3d3b4;
-  --bambu: #b98f5b;
-  --madera: #7a5a38;
-  --hoja: #5e7f45;
-  --carbon: #2b2a28;
+  --fondo: #f3e9d8;
+  --tarjeta: #faf4ea;
+  --texto: #2b2620;
+  --suave: #6b6254;
+  --acento: #3d5a45;
+  --acento-oscuro: #2f4636;
+  --error: #a23b2a;
+  --borde: #d9cbb2;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
-  font-family: "Jost", sans-serif;
-  font-weight: 300;
-  background: var(--crema);
-  color: var(--carbon);
-  line-height: 1.6;
+  padding: 0 1.25rem 3rem;
+  font-family: "Jost", system-ui, sans-serif;
+  font-weight: 400;
+  color: var(--texto);
+  background: var(--fondo);
+  line-height: 1.5;
 }
 
-header {
-  text-align: center;
-  padding: 3rem 1rem 2rem;
-  border-bottom: 1px solid var(--arena);
-}
-
-header h1 {
+h1, h2, h3 {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 600;
+  line-height: 1.15;
   margin: 0;
-  font-family: "Cormorant Garmond", serif;
-  font-weight: 600;
-  font-size: 2.6rem;
-  letter-spacing: 1px;
-  color: var(--madera);
-}
-header h2 {
-  margin: 0.5rem 0 0;
-  font-weight: 300;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  font-size: 0.85rem;
-  color: var(--hoja);
 }
 
-header h3 {
-  font-family: "Cormorant Garamond", serif;
-  font-weight: 600;
-  color: var(--madera);
-  margin: 2.5em;
+/* ---------- Cabecera ---------- */
+.cabecera {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 0 1.5rem;
+  text-align: center;
+}
+.cabecera h1 { font-size: 2.6rem; }
+.lema { margin: .2rem 0 0; color: var(--suave); font-weight: 300; font-size: 1.1rem; }
+
+/* ---------- Formularios ---------- */
+label {
+  display: block;
+  margin-bottom: .3rem;
+  font-size: .9rem;
+  color: var(--suave);
 }
 
-main {
-  max-width: 1100px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-}
-
-table {
+input, select {
   width: 100%;
-  border-collapse: collapse;
-  background: var(--blanco-calido);
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 16px rgba(122, 90, 56, 0.12);
+  padding: .65rem .8rem;
+  font: inherit;
+  color: var(--texto);
+  background: #fff;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
 }
 
+input:focus-visible, select:focus-visible, button:focus-visible {
+  outline: 3px solid var(--acento);
+  outline-offset: 2px;
+}
+
+button {
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  padding: .7rem 1.2rem;
+  color: #fff;
+  background: var(--acento);
+  border: 1px solid var(--acento);
+  border-radius: 8px;
+}
+button:hover { background: var(--acento-oscuro); }
+button:disabled { opacity: .6; cursor: wait; }
+
+button.secundario {
+  color: var(--texto);
+  background: transparent;
+  border-color: var(--borde);
+}
+button.secundario:hover { background: rgba(0, 0, 0, .05); }
+
+/* Fila de campos con botón al final */
+.fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .9rem;
+  align-items: flex-end;
+}
+.campo { flex: 1 1 140px; }
+
+#mensaje-login, #mensaje-venta {
+  min-height: 1.4rem;
+  margin: .8rem 0 0;
+  font-size: .9rem;
+  color: var(--suave);
+}
+
+/* ---------- Pantalla de login ---------- */
+#seccion-login {
+  max-width: 400px;
+  margin: 1.5rem auto 0;
+  padding: 2rem;
+  background: var(--tarjeta);
+  border: 1px solid var(--borde);
+  border-radius: 14px;
+}
+#seccion-login h2 { font-size: 1.8rem; }
+#seccion-login .ayuda { margin: .25rem 0 1.5rem; color: var(--suave); }
+#seccion-login input { margin-bottom: 1rem; }
+#seccion-login button { width: 100%; margin-top: .25rem; }
+#mensaje-login { color: var(--error); }
+
+/* ---------- Sistema de ventas ---------- */
+#seccion-app { max-width: 960px; margin: 0 auto; }
+
+.barra-superior {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+.barra-superior h2 { font-size: 1.8rem; }
+
+.bloque {
+  margin-bottom: 1.25rem;
+  padding: 1.5rem;
+  background: var(--tarjeta);
+  border: 1px solid var(--borde);
+  border-radius: 14px;
+}
+.bloque h3 { margin-bottom: 1rem; font-size: 1.4rem; }
+
+/* ---------- Menú de pestañas ---------- */
+.panel-pestana[hidden] { display: none; }
+
+.menu-pestanas {
+  display: flex;
+  gap: .25rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid var(--borde);
+  overflow-x: auto; /* en móvil se desliza si no caben */
+}
+
+/* Anula el estilo global de button para que parezca pestaña */
+.pestana {
+  padding: .7rem 1.2rem;
+  color: var(--suave);
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  font-weight: 400;
+  white-space: nowrap;
+  margin-bottom: -1px;
+}
+.pestana:hover {
+  color: var(--acento);
+  background: transparent;
+}
+.pestana.activa {
+  color: var(--acento);
+  border-bottom-color: var(--acento);
+  font-weight: 500;
+}
+
+/* ---------- Contacto ---------- */
+.enlaces-contacto {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+  margin-top: 1rem;
+}
+.enlace-contacto {
+  display: inline-block;
+  padding: .7rem 1.4rem;
+  color: #fff;
+  background: var(--acento);
+  border: 1px solid var(--acento);
+  border-radius: 8px;
+  font-weight: 500;
+  text-decoration: none;
+}
+.enlace-contacto:hover { background: var(--acento-oscuro); }
+.enlace-contacto:focus-visible {
+  outline: 3px solid var(--acento);
+  outline-offset: 2px;
+}
+
+/* ---------- Botón flotante de WhatsApp ---------- */
+.whatsapp-flotante {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 100;
+  padding: .8rem 1.2rem;
+  color: #fff;
+  background: #25d366; /* verde oficial de WhatsApp */
+  border-radius: 999px;
+  font-weight: 500;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .25);
+}
+.whatsapp-flotante:hover { background: #1ebe5b; }
+
+/* ---------- Tablas ---------- */
+.tabla-scroll { overflow-x: auto; }
+
+table { width: 100%; border-collapse: collapse; }
+
+th, td {
+  padding: .75rem .6rem;
+  text-align: left;
+  border-bottom: 1px solid var(--borde);
+}
+th {
+  font-size: .85rem;
+  font-weight: 500;
+  color: var(--suave);
+}
+td button {
+  padding: .4rem .8rem;
+  font-size: .9rem;
+  color: var(--texto);
+  background: transparent;
+  border-color: var(--borde);
+}
+td button:hover { background: rgba(0, 0, 0, .05); }
+
+#panel-edicion {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--borde);
+}
+
+/* ---------- Galería ---------- */
 #galeria {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
 }
-
-.tarjeta {
-  background: var(--blanco-calido);
-  border-radius: 14px;
+#galeria:empty::before {
+  content: "Aún no hay piezas entregadas.";
+  color: var(--suave);
+}
+#galeria .tarjeta {
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(122, 90, 56, 0.12);
-  transition:
-    transform 0.25s,
-    box-shadow 0.25s;
+  background: #fff;
+  border: 1px solid var(--borde);
+  border-radius: 10px;
 }
-
-.tarjeta:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(122, 90, 56, 0.2);
-}
-
-.tarjeta img {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
+#galeria img {
   display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
 }
+.tarjeta-info { padding: .75rem .9rem; }
+.tarjeta-info h3 { margin: 0; font-size: 1.15rem; }
+.tarjeta-info p { margin: .2rem 0 0; color: var(--suave); font-size: .95rem; }
 
-.tarjeta-info {
-  padding: 1rem 1.2rem 1.3rem;
-}
-
-.tarjeta-info h3 {
-  margin: 0;
-  font-family: "Cormorant Garamond", serif;
-  font-weight: 600;
-  font-size: 1.4rem;
-  color: var(--madera);
-}
-
-.precio {
-  margin: 0.3rem 0 0;
-  color: var(--hoja);
-  font-weight: 400;
+@media (max-width: 480px) {
+  .cabecera h1 { font-size: 2.1rem; }
+  .bloque { padding: 1.1rem; }
+  #seccion-login { padding: 1.5rem; }
 }

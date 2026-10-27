@@ -6,123 +6,214 @@
     <title>Sistema de Ventas - Artesano 3D</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Jost:wght@300;400;500&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="css/estilos.css" />
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="script.js"></script>
   </head>
   <body>
-    <header>
+    <header class="cabecera">
       <h1>Artesano 3D</h1>
-      <h2>Imprime tu mundo</h2>
-      <h3>Sistema de Ventas</h3>
+      <p class="lema">Imprime tu mundo</p>
     </header>
 
-    <section id="seccion-login"> 
+    <!-- PANTALLA 1: inicio de sesión (lo primero que se ve) -->
+    <section id="seccion-login" style="display: none">
       <h2>Iniciar sesión</h2>
+      <p class="ayuda">Acceso solo para administración.</p>
+
       <form id="form-login">
         <label for="login-email">Correo electrónico</label>
-        <input type="email" id="login-email" required />
+        <input type="email" id="login-email" autocomplete="username" required />
 
         <label for="login-password">Contraseña</label>
-        <input type="password" id="login-password" required />
-
-        <button type="submit">Iniciar sesión</button>
-      </form>
-      <p id="mensaje-login"></p>
-    </section>
-
-    <div id="seccion-app">
-    <button id="btn-cerrar-sesion">Cerrar sesión</button>
-
-    <table>
-      <thead>
-        <tr>
-          <th>Categoría</th>
-          <th>Precio</th>
-          <th>Total vendido</th>
-        </tr>
-    </table>
-    
-    
-    <div id="panel-edicion" style="display: none">
-      <h3>Editar categoría</h3>
-      <form id="form-editar-categoria">
-        <input type="hidden" id="editar-id" />
-        <label>Categoría:
-          <input type="number" id="editar-categoria" />
-        </label>
-        <label
-          >Precio:
-          <input type="number" id="editar-precio" step="0.01" />
-        </label>
-        
-      </form>
-    </div>
-    
-  </div>
-   
-      <!-- Formulario para registrar una venta -->
-      <h3>Registrar venta</h3>
-      <form id="form-venta">
-        <label for="campo-categoriaNombre">Categoría</label>
-        <select id="campo-categoriaNombre" required></select>
-
-        <label for="campo-precio_item">Precio</label>
         <input
-          type="number"
-          id="campo-precio_item"
-          min="1"
-          value="1"
+          type="password"
+          id="login-password"
+          autocomplete="current-password"
           required
         />
 
-        <button type="submit">Registrar Venta</button>
+        <button type="submit">Entrar</button>
       </form>
-      <p id="mensaje-venta"></p>
+      <p id="mensaje-login" role="alert"></p>
+    </section>
 
-      <form id="form-total">
-      <label for="campo-total">Total vendido:</label>
-      <input type="number" id="campo-total" step="0.01" />
-      <button type="submit">Actualizar total</button>
-      <p id="mensaje-total"></p>
-    </form>
-      <!-- Tabla de categorías -->
-      <h3>Categorías</h3>
-      <table id="tabla-categorias">
-        <thead>
-          <tr>
-            <th>Categoría</th>
-            <th>Precio</th>
-            <th>total vendido</th>
-          </tr>
-        </thead>
-        <tbody id="cuerpo-categorias"></tbody>
-      </table>
-
-      <!-- Panel de edición (opcional, oculto por defecto) -->
-      <div id="panel-edicion" style="display: none">
-        <h3>Editar categoría</h3>
-        <form id="form-editar-categoria">
-          <input type="hidden" id="editar-id" />
-          <label
-            >Categoría:
-            <input type="number" id="editar-categoria" />
-          </label>
-          <label
-            >Precio:
-            <input type="number" id="editar-precio" step="0.01" />
-          </label>
-          <button type="submit">Guardar Cambios</button>
-        </form>
+    <!-- PANTALLA 2: sistema (solo visible tras autenticarse) -->
+    <div id="seccion-app" style="display: none">
+      <div class="barra-superior">
+        <h2>Sistema de ventas</h2>
+        <button id="btn-cerrar-sesion" class="secundario">Cerrar sesión</button>
       </div>
 
-      <h2>Piezas entregadas</h2>
-      <section id="galeria"></section>
-    
+      <!-- MENÚ DE PESTAÑAS -->
+      <nav id="menu-pestanas" class="menu-pestanas" role="tablist">
+        <button
+          class="pestana activa"
+          role="tab"
+          data-tab="ventas"
+          aria-selected="true"
+        >
+          Ventas
+        </button>
+        <button
+          class="pestana"
+          role="tab"
+          data-tab="categorias"
+          aria-selected="false"
+        >
+          Categorías
+        </button>
+        <button
+          class="pestana"
+          role="tab"
+          data-tab="galeria"
+          aria-selected="false"
+        >
+          Galería
+        </button>
+        <button
+          class="pestana"
+          role="tab"
+          data-tab="contacto"
+          aria-selected="false"
+        >
+          Contacto
+        </button>
+      </nav>
+
+      <!-- PESTAÑA: VENTAS -->
+      <div id="tab-ventas" class="panel-pestana" role="tabpanel">
+        <section class="bloque">
+          <h3>Registrar venta</h3>
+          <form id="form-venta" class="fila">
+            <div class="campo">
+              <label for="campo-categoria">Categoría</label>
+              <select id="campo-categoria" required></select>
+            </div>
+
+            <div class="campo">
+              <label for="campo-precio">Monto vendido</label>
+              <input
+                type="number"
+                id="campo-precio"
+                min="0.01"
+                step="0.01"
+                required
+              />
+            </div>
+
+            <button type="submit">Registrar venta</button>
+          </form>
+          <p id="mensaje-venta"></p>
+        </section>
+
+        <section class="bloque">
+          <h3>Ventas registradas</h3>
+          <div class="tabla-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Categoría</th>
+                  <th>Monto</th>
+                  <th>Total vendido</th>
+                </tr>
+              </thead>
+              <tbody id="cuerpo-ventas"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <!-- PESTAÑA: CATEGORÍAS -->
+      <div id="tab-categorias" class="panel-pestana" role="tabpanel" hidden>
+        <section class="bloque">
+          <h3>Categorías</h3>
+          <div class="tabla-scroll">
+            <table id="tabla-categorias">
+              <thead>
+                <tr>
+                  <th>Categoría</th>
+                  <th>Descripción</th>
+                  <th>Total vendido</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="cuerpo-categorias"></tbody>
+            </table>
+          </div>
+
+          <!-- Panel de edición (oculto por defecto) -->
+          <div id="panel-edicion" style="display: none">
+            <h3>Editar categoría</h3>
+            <form id="form-editar-categoria" class="fila">
+              <input type="hidden" id="editar-id" />
+              <div class="campo">
+                <label for="editar-nombre">Categoría</label>
+                <input type="text" id="editar-nombre" />
+              </div>
+              <div class="campo">
+                <label for="editar-descripcion">Descripción</label>
+                <input type="text" id="editar-descripcion" />
+              </div>
+              <button type="submit">Guardar cambios</button>
+            </form>
+          </div>
+        </section>
+      </div>
+
+      <!-- PESTAÑA: GALERÍA -->
+      <div id="tab-galeria" class="panel-pestana" role="tabpanel" hidden>
+        <section class="bloque">
+          <h3>Piezas entregadas</h3>
+          <div id="galeria"></div>
+        </section>
+      </div>
+
+      <!-- PESTAÑA: CONTACTO -->
+      <div id="tab-contacto" class="panel-pestana" role="tabpanel" hidden>
+        <section class="bloque">
+          <h3>Contacto</h3>
+          <p>Escríbenos para cotizar tu pieza o resolver cualquier duda.</p>
+
+          <div class="enlaces-contacto">
+            <!-- WHATSAPP: cambia NUMERO por tu número con código de país,
+                 sin +, sin espacios ni guiones -->
+            <a
+              class="enlace-contacto"
+              href="https://wa.me/NUMERO?text=Hola%2C%20quiero%20cotizar%20una%20pieza%203D"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              WhatsApp
+            </a>
+
+            <!-- INSTAGRAM: cambia USUARIO por el nombre de la cuenta, sin @ -->
+            <a
+              class="enlace-contacto"
+              href="https://instagram.com/USUARIO"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Instagram
+            </a>
+          </div>
+        </section>
+      </div>
+
+      <!-- Botón flotante de WhatsApp (mismo número que arriba) -->
+      <a
+        class="whatsapp-flotante"
+        href="https://wa.me/NUMERO"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Escribir por WhatsApp"
+      >
+        WhatsApp
+      </a>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-client.js"></script>
